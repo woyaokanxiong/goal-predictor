@@ -329,11 +329,17 @@ const App: FC = () => {
         exportDate: new Date().toISOString()
       };
       
+      console.log('准备同步数据到 Gist:', {
+        gistId,
+        dataSize: JSON.stringify(data).length
+      });
+      
       const response = await fetch(`https://api.github.com/gists/${gistId}`, {
         method: 'PATCH',
         headers: {
           'Authorization': `token ${githubToken}`,
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Accept': 'application/vnd.github.v3+json'
         },
         body: JSON.stringify({
           files: {
@@ -344,14 +350,27 @@ const App: FC = () => {
         })
       });
       
+      console.log('同步到 Gist 响应:', {
+        status: response.status,
+        statusText: response.statusText
+      });
+      
       if (response.ok) {
+        const gist = await response.json();
+        console.log('同步成功，Gist 信息:', gist);
         setSyncStatus('同步到 GitHub Gist 成功！');
         // 保存配置到 localStorage
         localStorage.setItem('gistId', gistId);
         localStorage.setItem('githubToken', githubToken);
       } else {
-        const error = await response.json();
-        setSyncStatus(`同步失败: ${error.message}`);
+        try {
+          const error = await response.json();
+          console.error('同步失败，错误信息:', error);
+          setSyncStatus(`同步失败: ${error.message || '未知错误'}`);
+        } catch (parseError) {
+          console.error('解析错误信息失败:', parseError);
+          setSyncStatus(`同步失败: ${response.status} ${response.statusText}`);
+        }
       }
     } catch (error) {
       console.error('同步到 Gist 失败:', error);
@@ -371,18 +390,30 @@ const App: FC = () => {
     setSyncStatus('正在从 GitHub Gist 加载数据...');
     
     try {
+      console.log('准备从 Gist 加载数据:', {
+        gistId
+      });
+      
       const response = await fetch(`https://api.github.com/gists/${gistId}`, {
         headers: {
-          'Authorization': `token ${githubToken}`
+          'Authorization': `token ${githubToken}`,
+          'Accept': 'application/vnd.github.v3+json'
         }
+      });
+      
+      console.log('从 Gist 加载响应:', {
+        status: response.status,
+        statusText: response.statusText
       });
       
       if (response.ok) {
         const gist = await response.json();
+        console.log('加载成功，Gist 信息:', gist);
         const fileContent = gist.files['finance-data.json']?.content;
         
         if (fileContent) {
           const data = JSON.parse(fileContent);
+          console.log('加载的数据:', data);
           
           if (data.goals) setGoals(data.goals);
           if (data.financialProfile) setFinancialProfile(data.financialProfile);
@@ -396,8 +427,14 @@ const App: FC = () => {
           setSyncStatus('Gist 中没有找到 finance-data.json 文件');
         }
       } else {
-        const error = await response.json();
-        setSyncStatus(`加载失败: ${error.message}`);
+        try {
+          const error = await response.json();
+          console.error('加载失败，错误信息:', error);
+          setSyncStatus(`加载失败: ${error.message || '未知错误'}`);
+        } catch (parseError) {
+          console.error('解析错误信息失败:', parseError);
+          setSyncStatus(`加载失败: ${response.status} ${response.statusText}`);
+        }
       }
     } catch (error) {
       console.error('从 Gist 加载失败:', error);
@@ -424,11 +461,16 @@ const App: FC = () => {
         exportDate: new Date().toISOString()
       };
       
+      console.log('准备创建 Gist:', {
+        dataSize: JSON.stringify(data).length
+      });
+      
       const response = await fetch('https://api.github.com/gists', {
         method: 'POST',
         headers: {
           'Authorization': `token ${githubToken}`,
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Accept': 'application/vnd.github.v3+json'
         },
         body: JSON.stringify({
           description: '个人财务管理数据',
@@ -441,16 +483,28 @@ const App: FC = () => {
         })
       });
       
+      console.log('创建 Gist 响应:', {
+        status: response.status,
+        statusText: response.statusText
+      });
+      
       if (response.ok) {
         const gist = await response.json();
+        console.log('创建成功，Gist 信息:', gist);
         setGistId(gist.id);
         setSyncStatus('GitHub Gist 创建成功！');
         // 保存配置到 localStorage
         localStorage.setItem('gistId', gist.id);
         localStorage.setItem('githubToken', githubToken);
       } else {
-        const error = await response.json();
-        setSyncStatus(`创建失败: ${error.message}`);
+        try {
+          const error = await response.json();
+          console.error('创建失败，错误信息:', error);
+          setSyncStatus(`创建失败: ${error.message || '未知错误'}`);
+        } catch (parseError) {
+          console.error('解析错误信息失败:', parseError);
+          setSyncStatus(`创建失败: ${response.status} ${response.statusText}`);
+        }
       }
     } catch (error) {
       console.error('创建 Gist 失败:', error);
