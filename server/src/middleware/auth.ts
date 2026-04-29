@@ -10,7 +10,7 @@ export interface AuthRequest extends Request {
 
 export function generateToken(user: User): string {
   return jwt.sign(
-    { id: user.id, username: user.username, email: user.email },
+    { id: user.id, username: user.username, email: user.email, role: user.role },
     JWT_SECRET,
     { expiresIn: '7d' }
   )
@@ -32,11 +32,11 @@ export async function authMiddleware(req: AuthRequest, res: Response, next: Next
     const token = authHeader.substring(7)
     const decoded = verifyToken(token)
 
-    // 模拟用户查询，返回解码后的用户信息
     const user: User = {
       id: decoded.id,
       username: decoded.username,
       email: decoded.email,
+      role: decoded.role || 'user',
       password: 'hashed_password',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
@@ -54,6 +54,20 @@ export async function authMiddleware(req: AuthRequest, res: Response, next: Next
   }
 }
 
+export function requireAdmin(req: AuthRequest, res: Response, next: NextFunction): void {
+  if (!req.user) {
+    res.status(401).json({ success: false, message: '未认证' })
+    return
+  }
+  
+  if (req.user.role !== 'admin') {
+    res.status(403).json({ success: false, message: '需要管理员权限' })
+    return
+  }
+  
+  next()
+}
+
 export async function optionalAuthMiddleware(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
   try {
     const authHeader = req.headers.authorization
@@ -66,6 +80,7 @@ export async function optionalAuthMiddleware(req: AuthRequest, res: Response, ne
         id: decoded.id,
         username: decoded.username,
         email: decoded.email,
+        role: decoded.role || 'user',
         password: 'hashed_password',
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()

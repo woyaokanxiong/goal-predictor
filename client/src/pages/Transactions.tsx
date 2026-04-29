@@ -17,10 +17,10 @@ import {
   Col,
   Radio,
 } from 'antd'
-import { PlusOutlined, EditOutlined, DeleteOutlined, FilterOutlined } from '@ant-design/icons'
+import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons'
 import dayjs from 'dayjs'
 import api from '../utils/api'
-import { Transaction, Account, Category } from '../types'
+import { Transaction, Category } from '../types'
 import { useFinanceStore } from '../store/finance'
 
 const { RangePicker } = DatePicker
@@ -29,7 +29,7 @@ const { TextArea } = Input
 
 export default function Transactions() {
   const [categories, setCategories] = useState<Category[]>([])
-  const [loading, setLoading] = useState(false)
+  const [loading, _] = useState(false)
   const [modalVisible, setModalVisible] = useState(false)
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null)
   // 只有在需要时才创建 form 实例

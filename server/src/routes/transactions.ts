@@ -32,10 +32,10 @@ router.get('/', (req: AuthRequest, res) => {
 
     // 应用过滤条件
     if (startDate) {
-      transactions = transactions.filter(t => t.date >= startDate as string);
+      transactions = transactions.filter(t => t.date >= String(startDate));
     }
     if (endDate) {
-      transactions = transactions.filter(t => t.date <= endDate as string);
+      transactions = transactions.filter(t => t.date <= String(endDate));
     }
     if (accountId) {
       transactions = transactions.filter(t => t.accountId === accountId);

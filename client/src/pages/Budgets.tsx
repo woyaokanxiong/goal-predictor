@@ -25,7 +25,6 @@ import { Budget, BudgetProgress, Category } from '../types'
 import dayjs from 'dayjs'
 
 const { Option } = Select
-const { RangePicker } = DatePicker
 
 const periodOptions = [
   { value: 'daily', label: '每日' },
@@ -37,7 +36,6 @@ const periodOptions = [
 export default function Budgets() {
   const [budgets, setBudgets] = useState<BudgetProgress[]>([])
   const [categories, setCategories] = useState<Category[]>([])
-  const [loading, setLoading] = useState(false)
   const [modalVisible, setModalVisible] = useState(false)
   const [editingBudget, setEditingBudget] = useState<Budget | null>(null)
   const [form] = Form.useForm()
@@ -48,14 +46,11 @@ export default function Budgets() {
   }, [])
 
   const fetchBudgets = async () => {
-    setLoading(true)
     try {
       const response = await api.get('/budgets')
       setBudgets(response.data.data)
     } catch (error) {
       message.error('获取预算列表失败')
-    } finally {
-      setLoading(false)
     }
   }
 
@@ -124,7 +119,7 @@ export default function Budgets() {
 
   const getProgressStatus = (percentage: number) => {
     if (percentage >= 100) return 'exception'
-    if (percentage >= 80) return 'warning'
+    if (percentage >= 80) return 'active'
     return 'success'
   }
 

@@ -53,11 +53,10 @@ class MemoryDB {
   }
 }
 
-let db: MemoryDB
+let db: MemoryDB = new MemoryDB()
 
 export async function initDatabase(): Promise<void> {
   try {
-    db = new MemoryDB()
     await insertDefaultCategories()
     console.log('Database initialized successfully')
   } catch (error) {
@@ -88,7 +87,7 @@ async function insertDefaultCategories(): Promise<void> {
   console.log('Inserting default categories:', defaultCategories)
 }
 
-export function getDb(): MemoryDB {
+export function getDb(): MemoryDB | undefined {
   return db
 }
 

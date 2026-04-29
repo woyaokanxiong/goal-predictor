@@ -75,13 +75,13 @@ router.post('/csv', upload.single('file'), async (req: AuthRequest, res) => {
           continue;
         }
 
-        const account = getAccountStmt.get(req.user!.id, accountName) as { id: string } | undefined;
+        const account = getAccountStmt.get(req.user!.id, accountName) as unknown as { id: string } | null;
         if (!account) {
           errors.push(`第 ${i + 1} 行: 账户 "${accountName}" 不存在`);
           continue;
         }
 
-        const category = getCategoryStmt.get(req.user!.id, 'system', categoryName) as { id: string } | undefined;
+        const category = getCategoryStmt.get(req.user!.id, 'system', categoryName) as unknown as { id: string } | null;
         if (!category) {
           errors.push(`第 ${i + 1} 行: 分类 "${categoryName}" 不存在`);
           continue;
@@ -254,11 +254,11 @@ router.post('/json', upload.single('file'), async (req: AuthRequest, res) => {
       for (const transaction of transactions) {
         const newId = uuidv4();
         const accountId = idMapping[transaction.account_id];
-        let categoryId = idMapping[transaction.category_id];
+        let categoryId: string | undefined = idMapping[transaction.category_id];
         
         if (!categoryId) {
           const systemCategory = db.prepare('SELECT id FROM categories WHERE user_id = ? AND name = ?')
-            .get('system', transaction.category_name) as { id: string } | undefined;
+            .get('system', transaction.category_name) as unknown as { id: string } | null;
           categoryId = systemCategory?.id;
         }
 

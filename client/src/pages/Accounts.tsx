@@ -43,7 +43,6 @@ const accountTypes = [
 ]
 
 export default function Accounts() {
-  const [loading, setLoading] = useState(false)
   const [modalVisible, setModalVisible] = useState(false)
   const [editingAccount, setEditingAccount] = useState<Account | null>(null)
   const [form] = Form.useForm()

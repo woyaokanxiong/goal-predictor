@@ -144,7 +144,7 @@ export default function Goals() {
     {
       title: '进度',
       key: 'progress',
-      render: (_, record: GoalProgress) => (
+      render: (_: any, record: GoalProgress) => (
         <div>
           <Progress 
             percent={Math.round(record.progress)} 
@@ -219,20 +219,20 @@ export default function Goals() {
                 title="目标金额" 
                 value={goalProgress.goal.targetAmount} 
                 precision={2}
-                formatter={(value) => formatAmount(value)}
+                formatter={(value) => formatAmount(Number(value))}
               />
               <Statistic 
                 title="当前金额" 
                 value={goalProgress.goal.currentAmount} 
                 precision={2}
-                formatter={(value) => formatAmount(value)}
+                formatter={(value) => formatAmount(Number(value))}
                 style={{ marginTop: 16 }}
               />
               <Statistic 
                 title="剩余金额" 
                 value={goalProgress.remainingAmount} 
                 precision={2}
-                formatter={(value) => formatAmount(value)}
+                formatter={(value) => formatAmount(Number(value))}
                 style={{ marginTop: 16 }}
               />
               <div style={{ marginTop: 24 }}>

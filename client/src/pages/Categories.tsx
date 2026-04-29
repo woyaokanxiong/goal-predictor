@@ -68,10 +68,9 @@ const defaultTags = [
 
 export default function Categories() {
   const [categories, setCategories] = useState<Category[]>([])
-  const [loading, setLoading] = useState(false)
+  const [activeType, setActiveType] = useState<'expense' | 'income'>('expense')
   const [modalVisible, setModalVisible] = useState(false)
   const [editingCategory, setEditingCategory] = useState<Category | null>(null)
-  const [activeType, setActiveType] = useState<'expense' | 'income'>('expense')
   const [form] = Form.useForm()
   const [allTags, setAllTags] = useState<string[]>(defaultTags)
 
@@ -82,7 +81,6 @@ export default function Categories() {
   }, [])
 
   const fetchCategories = async () => {
-    setLoading(true)
     try {
       const response = await api.get('/categories')
       setCategories(response.data.data)
@@ -93,8 +91,6 @@ export default function Categories() {
       setAllTags([...new Set([...defaultTags, ...tagsFromCategories])])
     } catch (error) {
       message.error('获取分类列表失败')
-    } finally {
-      setLoading(false)
     }
   }
 
@@ -231,15 +227,15 @@ export default function Categories() {
                   <div>
                     <div style={{ fontWeight: 'bold' }}>{category.name}</div>
                     {category.userId === 'system' && (
-                      <Tag size="small" color="default">系统</Tag>
+                      <Tag color="default">系统</Tag>
                     )}
                     {category.tags && category.tags.length > 0 && (
                       <div style={{ marginTop: 4 }}>
                         {category.tags.slice(0, 3).map((tag) => (
-                          <Tag key={tag} size="small">{tag}</Tag>
+                          <Tag key={tag}>{tag}</Tag>
                         ))}
                         {category.tags.length > 3 && (
-                          <Tag size="small">+{category.tags.length - 3}</Tag>
+                          <Tag>+{category.tags.length - 3}</Tag>
                         )}
                       </div>
                     )}

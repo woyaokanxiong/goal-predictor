@@ -12,7 +12,7 @@ import {
 } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
 import ReactECharts from 'echarts-for-react'
-import { DashboardData, Transaction, CategorySummary } from '../types'
+import { Transaction, CategorySummary } from '../types'
 import dayjs from 'dayjs'
 import { useFinanceStore } from '../store/finance'
 
@@ -64,9 +64,9 @@ export default function Dashboard() {
             },
           },
           data: categories.map((cat) => ({
+            name: cat.categoryName,
             value: cat.amount,
-            name: cat.name,
-            itemStyle: { color: cat.color },
+            itemStyle: { color: cat.categoryColor },
           })),
         },
       ],
@@ -258,7 +258,7 @@ export default function Dashboard() {
                     title={item.description || item.categoryName}
                     description={
                       <div>
-                        <Tag size="small" color={item.categoryColor}>
+                        <Tag color={item.categoryColor}>
                           {item.categoryName}
                         </Tag>
                         <span style={{ marginLeft: 8, color: '#999' }}>

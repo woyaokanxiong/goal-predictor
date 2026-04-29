@@ -8,10 +8,8 @@ import {
   Upload,
   Tabs,
   List,
-  Tag,
   Modal,
   Alert,
-  Space,
 } from 'antd'
 import {
   UserOutlined,
@@ -28,13 +26,13 @@ import api from '../utils/api'
 const { confirm } = Modal
 
 export default function Settings() {
-  const { user, logout } = useAuthStore()
+  const { user } = useAuthStore()
   const [profileForm] = Form.useForm()
   const [passwordForm] = Form.useForm()
   const [loading, setLoading] = useState(false)
   const [uploadLoading, setUploadLoading] = useState(false)
 
-  const handleUpdateProfile = async (values: any) => {
+  const handleUpdateProfile = async () => {
     setLoading(true)
     try {
       message.success('个人资料更新成功')

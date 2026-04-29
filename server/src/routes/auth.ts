@@ -89,6 +89,7 @@ router.post('/register', async (req, res) => {
       username,
       email,
       password: hashedPassword,
+      role: 'user',
       createdAt: now,
       updatedAt: now
     }

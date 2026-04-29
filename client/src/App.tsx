@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { useEffect } from 'react'
 import { useAuthStore } from './store/auth'
 import Login from './pages/Login'
@@ -12,6 +12,7 @@ import Budgets from './pages/Budgets'
 import Statistics from './pages/Statistics'
 import Settings from './pages/Settings'
 import Goals from './pages/Goals'
+import Users from './pages/Users'
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuthStore()
@@ -26,7 +27,7 @@ function App() {
   }, [checkAuth])
 
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
@@ -44,11 +45,12 @@ function App() {
           <Route path="categories" element={<Categories />} />
           <Route path="budgets" element={<Budgets />} />
           <Route path="statistics" element={<Statistics />} />
+          <Route path="users" element={<Users />} />
           <Route path="settings" element={<Settings />} />
           <Route path="goals" element={<Goals />} />
         </Route>
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   )
 }
 

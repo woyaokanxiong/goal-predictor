@@ -172,57 +172,6 @@ export default function Statistics() {
     }
   }
 
-  const getBarChartOption = (categories: CategorySummary[], title: string) => {
-    return {
-      title: {
-        text: title,
-        left: 'center',
-      },
-      tooltip: {
-        trigger: 'axis',
-        axisPointer: { type: 'shadow' },
-        formatter: (params: any) => {
-          const data = params[0]
-          return `${data.name}<br/>金额: ¥${data.value.toLocaleString()}`
-        },
-      },
-      grid: {
-        left: '3%',
-        right: '4%',
-        bottom: '3%',
-        containLabel: true,
-      },
-      xAxis: {
-        type: 'category',
-        data: categories.map((cat) => cat.categoryName),
-        axisLabel: {
-          rotate: 45,
-        },
-      },
-      yAxis: {
-        type: 'value',
-        axisLabel: {
-          formatter: (value: number) => `¥${value}`,
-        },
-      },
-      series: [
-        {
-          name: '金额',
-          type: 'bar',
-          data: categories.map((cat) => ({
-            value: cat.amount,
-            itemStyle: { color: cat.categoryColor },
-          })),
-          label: {
-            show: true,
-            position: 'top',
-            formatter: (params: any) => `¥${params.value}`,
-          },
-        },
-      ],
-    }
-  }
-
   const tabItems = [
     {
       key: '1',

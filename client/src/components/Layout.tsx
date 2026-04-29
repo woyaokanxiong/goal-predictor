@@ -22,21 +22,11 @@ import {
   MenuUnfoldOutlined,
   BellOutlined,
   StarOutlined,
+  UserOutlined,
 } from '@ant-design/icons'
 import { useAuthStore } from '../store/auth'
 
 const { Header, Sider, Content } = AntLayout
-
-const menuItems = [
-  { key: '/', icon: <DashboardOutlined />, label: '仪表盘' },
-  { key: '/transactions', icon: <TransactionOutlined />, label: '记账' },
-  { key: '/accounts', icon: <CreditCardOutlined />, label: '账户' },
-  { key: '/categories', icon: <TagsOutlined />, label: '分类' },
-  { key: '/budgets', icon: <PieChartOutlined />, label: '预算' },
-  { key: '/goals', icon: <StarOutlined />, label: '目标' },
-  { key: '/statistics', icon: <BarChartOutlined />, label: '统计' },
-  { key: '/settings', icon: <SettingOutlined />, label: '设置' },
-]
 
 export default function Layout() {
   const [collapsed, setCollapsed] = useState(false)
@@ -46,6 +36,18 @@ export default function Layout() {
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken()
+
+  const menuItems = [
+    { key: '/', icon: <DashboardOutlined />, label: '仪表盘' },
+    { key: '/transactions', icon: <TransactionOutlined />, label: '记账' },
+    { key: '/accounts', icon: <CreditCardOutlined />, label: '账户' },
+    { key: '/categories', icon: <TagsOutlined />, label: '分类' },
+    { key: '/budgets', icon: <PieChartOutlined />, label: '预算' },
+    { key: '/goals', icon: <StarOutlined />, label: '目标' },
+    { key: '/statistics', icon: <BarChartOutlined />, label: '统计' },
+    ...(user?.role === 'admin' ? [{ key: '/users', icon: <UserOutlined />, label: '用户管理' }] : []),
+    { key: '/settings', icon: <SettingOutlined />, label: '设置' },
+  ]
 
   const handleMenuClick = ({ key }: { key: string }) => {
     navigate(key)
